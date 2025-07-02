@@ -71,7 +71,6 @@ class DatabaseManager:
                                      AND id = %s \
                                    """
                     cursor.execute(update_query, (password, effective_date, lock_id, password_id))
-                    logging.info(f"成功为门锁 {lock_id} 更新密码 (序号: {password_id})")
                 else:
                     # 记录不存在，执行插入操作
                     insert_query = """
@@ -79,7 +78,6 @@ class DatabaseManager:
                                    VALUES (%s, %s, %s, %s) \
                                    """
                     cursor.execute(insert_query, (password_id, lock_id, password, effective_date))
-                    logging.info(f"成功为门锁 {lock_id} 插入新密码 (序号: {password_id})")
 
                 conn.commit()
             except Error as e:
@@ -94,7 +92,6 @@ class DatabaseManager:
             try:
                 cursor.execute(query, (lock_id, date))
                 conn.commit()
-                logging.info(f"已清除门锁 {lock_id} 在 {date} 的旧密码")
             except Error as e:
                 logging.error(f"清除门锁 {lock_id} 旧密码失败: {e}")
                 conn.rollback()

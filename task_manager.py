@@ -65,6 +65,25 @@ class TaskManager:
             list(initial_slots[3])
         ]
 
+        #检查是否存在跨三个时段的预约
+        for appointment in appointments:
+            if appointment['start_time'] < initial_slots[1][1] and appointment['end_time'] > initial_slots[3][0]:
+                # 第一时段结束时间调整为预约的开始时间
+                final_slots[0][1] = appointment['start_time'] - 1
+                # 第二时段开始时间调整为预约的开始时间
+                final_slots[1][0] = appointment['start_time']
+                # 第二时段结束时间调整为预约的结束时间
+                final_slots[1][1] = appointment['end_time'] - 1
+                # 第三时段开始时间调整为预约的结束时间
+                final_slots[2][0] = appointment['end_time']
+                logging.info(
+                    f"跨时段预约调整：时段 1 结束时间调整为 {datetime.fromtimestamp(final_slots[0][1]).strftime('%H:%M:%S')}, "
+                    f"时段 2 开始时间调整为 {datetime.fromtimestamp(final_slots[1][0]).strftime('%H:%M:%S')}, "
+                    f"时段 2 结束时间调整为 {datetime.fromtimestamp(final_slots[1][1]).strftime('%H:%M:%S')}, "
+                    f"时段 3 开始时间调整为 {datetime.fromtimestamp(final_slots[2][0]).strftime('%H:%M:%S')}")
+                return [tuple(s) for s in final_slots]
+
+
         # 调整 Slot 1 和 Slot 2 的边界
         for i in range(2):  # i=0 for Slot 1, i=1 for Slot 2
             slot_id = i + 1
