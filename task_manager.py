@@ -198,13 +198,13 @@ class TaskManager:
         generated_info = []
         for i, (start, end) in enumerate(final_slots, 1):
             password_id = i
+            start = start - 1800
             # 确保即使是空区间也生成一个密码，以满足3个密码的要求
             # API可能不允许开始时间大于结束时间，所以需要处理
             if start > end:
                 logging.warning(f"时段 {password_id} ({datetime.fromtimestamp(start)}-{datetime.fromtimestamp(end)}) 是无效区间，跳过密码生成。")
                 continue
 
-            start = start - 1800
             new_pass_data = self.api.add_temp_password(serial, start, end)
             if new_pass_data and 'pwd' in new_pass_data:
                 password = new_pass_data['pwd']
