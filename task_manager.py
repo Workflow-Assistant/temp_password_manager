@@ -106,7 +106,7 @@ class TaskManager:
             # 查找所有满足延长条件的预约
             extending_apps = [
                 app for app in relevant_apps
-                if app['start_time'] < midpoint and app['end_time'] > slot_end_boundary
+                if app['start_time'] <= midpoint and app['end_time'] > slot_end_boundary
             ]
             if extending_apps:
                 # 如果有多个，取那个延伸得最远的预约
