@@ -120,9 +120,9 @@ class YS7APIManager:
             token_data = res_json['data']
             self.access_token = token_data['accessToken']
             # token有效期单位是毫秒，转换为秒级时间戳
-            expire_seconds = token_data.get('expireTime', 7 * 24 * 3600 * 1000) / 1000
+            expire_seconds = token_data.get('expireTime', 0) / 1000
             # 设置本地过期时间，比实际过期时间提前1小时，防止边界问题
-            self.token_expires_at = time.time() + expire_seconds - 3600
+            self.token_expires_at = expire_seconds - 3600
 
             logging.info("成功获取新的AccessToken")
             self._save_token_to_file()  # 持久化保存
